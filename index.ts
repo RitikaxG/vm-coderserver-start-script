@@ -60,6 +60,41 @@ app.post("/stop", (req, res ) => {
     })
 })
 
+app.post("/containerStatus",(req,res) => {
+    const { containerName } = req.body;
+    if(!containerName){
+        return res.status(400).json({
+            message : "Container name must be provided"
+        })
+    }
+
+    const statusCommand = `docker inspect -f '{{.State.Running}}' ${containerName} 2>/dev/null || echo "false"`;
+
+    exec(statusCommand,(err,stdout,stderr) => {
+        const isRunning = stdout.trim() === "true";
+
+        if(err){
+            console.error(`Error checking status for container ${containerName}`,stderr);
+            return res.status(500).json({
+                message : `Error checking container status`,
+                error : err.message
+            })
+        }
+        if(isRunning){
+            return res.status(200).json({
+                status : "running",
+                containerName
+            })
+        }
+        else{
+            return res.status(200).json({
+                containerName,
+                status : "stopped"
+            })
+        }
+    })
+})
+
 app.listen(3000,()=>{
     console.log("Listening on port 3000");
 })
