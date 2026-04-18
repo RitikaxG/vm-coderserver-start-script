@@ -256,3 +256,7 @@ app.post("/containerStatus",async (req,res) => {
         });
     }
 })
+
+app.listen(3000,()=>{
+    console.log("Code VM Agent running on port 3000");
+})
