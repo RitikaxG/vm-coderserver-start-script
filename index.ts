@@ -83,6 +83,7 @@ const runNewContainer = async ({
     projectName : string,
     projectType : string,
 }) => {
+    const normalizedProjectType = projectType.toLowerCase();
     const { stdout } = await execFileAsync("docker", [
     "run",
     "-d",
@@ -93,7 +94,7 @@ const runNewContainer = async ({
     "-e",
     `PROJECT_NAME=${projectName}`,
     "-e",
-    `PROJECT_TYPE=${projectType}`,
+    `PROJECT_TYPE=${normalizedProjectType}`,
     "-p",
     "8080:8080",
     "my-code-server",
